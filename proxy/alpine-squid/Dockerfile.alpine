@@ -1,0 +1,23 @@
+FROM alpine:latest
+
+# Install necessary packages
+RUN apk update && \
+    apk add --no-cache squid apache2-utils
+
+# Copy Squid configuration and entrypoint script
+COPY squid.conf /etc/squid/squid.conf
+COPY entrypoint.sh /entrypoint.sh
+
+# Set permissions and create a non-root user
+RUN chmod 600 /etc/squid/passwd && \
+    adduser -S -G proxy squid
+
+# Expose Squid port
+EXPOSE 3128
+
+# Switch to non-root user
+USER squid
+
+# Run the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
+
