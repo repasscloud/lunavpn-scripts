@@ -1,0 +1,6 @@
+#!/sbin/openrc-run
+command="/usr/bin/docker-compose"
+command_args="-f /app/docker-compose.yml up -d"
+description="Docker Compose Service for WireGuard"
+name="docker-compose-wg"
+pidfile="/var/run/docker-compose-wg.pid"
