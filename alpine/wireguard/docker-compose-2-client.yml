@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    volumes:
+      - /app/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /app/caddy/caddy_data:/data
+      - /app/caddy/caddy_config:/config
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - nginx
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.24.0-alpine-slim
+    volumes:
+      - "/app/nginx/html:/usr/share/nginx/html:ro"
+    expose:
+      - 80
+
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SERVERPORT=51820
+      - PEERS=2
+      - PEERDNS=auto
+      - INTERNAL_SUBNET=10.13.13.0
+      - ALLOWEDIPS=0.0.0.0/0
+      - LOG_CONFS=false
+    volumes:
+      - /app/wg/config:/config
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    depends_on:
+      - caddy
+      - nginx
+    restart: unless-stopped
