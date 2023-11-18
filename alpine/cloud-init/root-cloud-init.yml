@@ -1,0 +1,31 @@
+#cloud-config
+package_update: true
+packages:
+  - docker
+  - docker-compose
+  - git
+  - curl
+
+runcmd:
+  - rc-update add docker boot
+  - service docker start
+  - mkdir -p /root/.ssh
+  - chmod 700 /root/.ssh
+  - echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjWFuC84iy2nhO6vqKh9VnrqfipV+l3yheC8vM/k90k hello@lunavpn.co" > /root/.ssh/authorized_keys
+  - chmod 600 /root/.ssh/authorized_keys
+  - mkdir -p /app
+  - mkdir -p /app/caddy
+  - curl -o /app/caddy/Caddyfile https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/caddy/etc/caddy/Caddyfile
+  - mkdir -p /app/caddy/caddy_data
+  - mkdir -p /app/caddy/caddy_config
+  - mkdir -p /app/flask
+  - curl -o /app/flask/app.py https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/flask/app/app.py
+  - curl -o /app/flask/Dockerfile https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/flask/app/Dockerfile
+  - curl -o /app/flask/.dockerignore https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/flask/app/.dockerignore
+  - mkdir -p /app/lunavpn
+  - uuidgen | tr -d '\n' > /app/lunavpn/server.uuid
+  - mkdir -p /app/nginx/html
+  - curl -o /app/nginx/html/index.html https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/index.html
+  - curl -o /app/nginx/html/style.css https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/style.css
+  - mkdir -p /app/wg/config
+  - curl -o /app/docker-compose.yml 

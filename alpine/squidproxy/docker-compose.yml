@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    volumes:
+      - /app/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /app/caddy/caddy_data:/data
+      - /app/caddy/caddy_config:/config
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - nginx
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.24.0-alpine-slim
+    volumes:
+      - "/app/nginx/html:/usr/share/nginx/html:ro"
+    expose:
+      - 80
+
+  squid:
+    image: sameersbn/squid:3.5.27-2
+    volumes:
+      - /app/squid/squid.conf:/etc/squid/squid.conf
+      - /app/squid/passwd:/etc/squid/passwd
+    ports:
+      - "3128:3128"
+    restart: always
+    depends_on:
+      - caddy
