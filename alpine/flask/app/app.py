@@ -7,12 +7,12 @@ app = Flask(__name__)
 def peer_data():
     try:
         # Paths to the image and configuration files
-        peer1_image_path = './config/peer1/peer1.png'
-        peer1_config_path = './config/peer1/peer1.conf'
-        peer2_image_path = './config/peer2/peer2.png'
-        peer2_config_path = './config/peer2/peer2.conf'
-        peer3_image_path = './config/peer3/peer3.png'
-        peer3_config_path = './config/peer3/peer3.conf'
+        peer1_image_path = '/app/wg/config/peer1/peer1.png'
+        peer1_config_path = '/app/wg/config/peer1/peer1.conf'
+        peer2_image_path = '/app/wg/config/peer2/peer2.png'
+        peer2_config_path = '/app/wg/config/peer2/peer2.conf'
+        peer3_image_path = '/app/wg/config/peer3/peer3.png'
+        peer3_config_path = '/app/wg/config/peer3/peer3.conf'
 
         # Read the images and convert to base64
         with open(peer1_image_path, 'rb') as peer1_image_file:
