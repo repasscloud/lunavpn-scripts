@@ -7,9 +7,5 @@
 }
 
 :443 {
-  tls {
-    dns cloudflare
-  }
-
   reverse_proxy nginx:80
 }
