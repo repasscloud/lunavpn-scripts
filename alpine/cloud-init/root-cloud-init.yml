@@ -5,6 +5,10 @@ packages:
   - docker-compose
   - git
   - curl
+  - icu-data-full
+  - icu-libs
+  - tzdata
+  - apache2-utils
 
 runcmd:
   - rc-update add docker boot
@@ -29,3 +33,9 @@ runcmd:
   - curl -o /app/nginx/html/style.css https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/style.css
   - mkdir -p /app/wg/config
   - curl -o /app/docker-compose.yml 
+
+
+#apk update --no-cache && apk add --no-cache docker docker-compose git curl icu-data-full icu-libs tzdata apache2-utils
+
+
+
