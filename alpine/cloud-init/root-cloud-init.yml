@@ -5,6 +5,7 @@ packages:
   - docker-compose
   - git
   - curl
+  - icu-dev
 
 runcmd:
   - rc-update add docker boot
