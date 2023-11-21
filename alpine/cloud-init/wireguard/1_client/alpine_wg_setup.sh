@@ -57,6 +57,11 @@ chmod +x /etc/init.d/docker-compose-wg
 rc-update add docker-compose-wg default
 ufw allow 51820/udp
 
+# LunaVPN Reboot Task
+wget -O /etc/init.d/lunavpn-lvfucs https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/lunavpn/lunavpn-lvfucs
+chmod +x /etc/init.d/lunavpn-lvfucs
+rc-update add lunavpn-lvfucs default
+
 # Enable and start UFW, then reboot
 ufw --force enable
 reboot
