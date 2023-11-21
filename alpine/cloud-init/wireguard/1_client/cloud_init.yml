@@ -1,0 +1,69 @@
+#cloud-config
+package_update: true
+packages:
+  - docker
+  - docker-compose
+  - git
+  - icu-data-full
+  - icu-libs
+  - tzdata
+  - apache2-utils
+  - ufw
+
+runcmd:
+# Update apk
+  - apk upgrade --no-cache
+
+# docker
+  - rc-update add docker boot
+  - service docker start
+  - ufw allow 2375/tcp
+  - ufw allow in on docker0
+
+# SSH keys
+  - mkdir -p /root/.ssh
+  - chmod 700 /root/.ssh
+  - echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjWFuC84iy2nhO6vqKh9VnrqfipV+l3yheC8vM/k90k hello@lunavpn.co" > /root/.ssh/authorized_keys
+  - chmod 600 /root/.ssh/authorized_keys
+  - ufw allow 22/tcp
+
+# caddy
+  - mkdir -p /app
+  - mkdir -p /app/caddy
+  - mkdir -p /app/caddy/caddy_config
+  - mkdir -p /app/caddy/caddy_data
+  - wget -O /app/caddy/Caddyfile https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/caddy/etc/caddy/Caddyfile
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+
+# Nginx
+  - mkdir -p /app/nginx/html
+  - wget -O /app/nginx/html/index.html https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/index.html
+  - wget -O /app/nginx/html/style.css https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/style.css
+
+# LunaVPN specifics
+  - mkdir -p /app/lunavpn
+  - uuidgen | tr -d '\n' > /app/lunavpn/server.uuid
+  - wget -O /app/lunavpn/get_latest.sh https://raw.githubusercontent.com/repasscloud/lunavpn-lvfucs/main/get_latest.sh
+  - chmod +x /app/lunavpn/get_latest.sh
+  - /app/lunavpn/get_latest.sh
+  - wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/lunavpn/alpine_update.sh
+  - chmod +x /app/lunavpn/alpine_update.sh
+  - (crontab -l ; echo "0 0 * * 1 /app/lunavpn/alpine_update.sh") | crontab -
+
+# Set server.type
+  - echo "wireguard" | tr -d '\n' > /app/lunavpn/server.type
+
+# Wireguard
+  - mkdir -p /app/wg
+  - mkdir -p /app/wg/config
+  - wget -O /app/docker-compose.yml https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/wireguard/docker-compose-1-client.yml
+  - wget -O /etc/init.d/docker-compose-wg https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/wireguard/docker-compose-wg
+  - chmod +x /etc/init.d/docker-compose-wg
+  - rc-update add docker-compose-wg default
+  - ufw allow 51820/udp
+
+# Last Steps
+  - ufw --force enable
+  - reboot
+

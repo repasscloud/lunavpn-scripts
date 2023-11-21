@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+name="lunavpn-lvfucs"
+description="LunaVPN LVFUCS Service"
+command="/app/lunavpn/lvfucs"
+command_args="-u https://api.lunavpn.co/webhook -h \"X-LunaVPN-Key: 106DB1EA-9027-4676-B658-112E04188F16\" -d /app/lunavpn/data.json"
+pidfile="/var/run/lunavpn-lvfucs.pid"
+start_stop_daemon_args="--background --make-pidfile"
+depends="docker-compose-wg net"
+
+depend() {
+  need docker-compose-wg
+  use net
+}
+
+start_pre() {
+  # Wait for networks to be online
+  rc-service net wait
+}
+
+stop_post() {
+  # Clean up after the program exits
+  rm -f "${pidfile}"
+}
