@@ -42,8 +42,11 @@ wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscl
 chmod +x /app/lunavpn/alpine_update.sh
 (crontab -l ; echo "0 0 * * 1 /app/lunavpn/alpine_update.sh") | crontab -
 
-# Set server.type
+# Set server.type (wireguard)
 echo "wireguard" | tr -d '\n' > /app/lunavpn/server.type
+wget -O /etc/init.d/lunavpn-lvfucs https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/lunavpn/lunavpn-lvfucs
+chmod +x /etc/init.d/lunavpn-lvfucs
+rc-update add lunavpn-lvfucs default
 
 # Wireguard setup
 mkdir -p /app/wg
