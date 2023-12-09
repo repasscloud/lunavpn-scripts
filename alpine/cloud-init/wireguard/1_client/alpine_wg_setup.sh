@@ -23,36 +23,33 @@ ufw allow 22/tcp
 # Set up Caddy web server
 mkdir -p /app/caddy/caddy_config
 mkdir -p /app/caddy/caddy_data
-wget -O /app/caddy/Caddyfile https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/caddy/etc/caddy/Caddyfile
 ufw allow 80/tcp
-ufw allow 443/tcp
 
-# Set up Nginx
+# Set up Nginx (nginx is retired, using caddy to serve now, no SSL)
 mkdir -p /app/nginx/html
-wget -O /app/nginx/html/index.html https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/index.html
-wget -O /app/nginx/html/style.css https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/nginx/usr/share/nginx/html/style.css
+wget -O /app/nginx/html/index.html https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/nginx/usr/share/nginx/html/index.html
+wget -O /app/nginx/html/style.css https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/nginx/usr/share/nginx/html/style.css
 
 # LunaVPN specifics
 mkdir -p /app/lunavpn
-uuidgen | tr -d '\n' > /app/lunavpn/server.uuid
-wget -O /app/lunavpn/get_latest.sh https://raw.githubusercontent.com/repasscloud/lunavpn-lvfucs/main/get_latest.sh
-chmod +x /app/lunavpn/get_latest.sh
-/app/lunavpn/get_latest.sh
-wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/lunavpn/alpine_update.sh
+wget -O /app/lunavpn/lvfucs_get_latest.sh https://raw.githubusercontent.com/repasscloud/lunavpn-lvfucs/main/get_latest.sh
+chmod +x /app/lunavpn/lvfucs_get_latest.sh
+/app/lunavpn/lvfucs_get_latest.sh
+wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/ap/lunavpn/alpine_update.sh
 chmod +x /app/lunavpn/alpine_update.sh
 (crontab -l ; echo "0 0 * * 1 /app/lunavpn/alpine_update.sh") | crontab -
 
-# Set server.type (wireguard)
-echo "wireguard" | tr -d '\n' > /app/lunavpn/server.type
-wget -O /etc/init.d/lunavpn-lvfucs https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/lunavpn/lunavpn-lvfucs
+# Set server.type (wg)
+echo "wg" | tr -d '\n' > /app/lunavpn/server.type
+wget -O /etc/init.d/lunavpn-lvfucs https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/lunavpn/lunavpn-lvfucs
 chmod +x /etc/init.d/lunavpn-lvfucs
 rc-update add lunavpn-lvfucs default
 
 # Wireguard setup
 mkdir -p /app/wg
 mkdir -p /app/wg/config
-wget -O /app/docker-compose.yml https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/wireguard/docker-compose-1-client.yml
-wget -O /etc/init.d/docker-compose-wg https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/wireguard/docker-compose-wg
+wget -O /app/docker-compose.yml https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/wireguard/docker-compose-1-client.yml
+wget -O /etc/init.d/docker-compose-wg https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/wireguard/docker-compose-wg
 chmod +x /etc/init.d/docker-compose-wg
 rc-update add docker-compose-wg default
 ufw allow 51820/udp
@@ -62,6 +59,7 @@ wget -O /etc/init.d/lunavpn-lvfucs https://raw.githubusercontent.com/repasscloud
 chmod +x /etc/init.d/lunavpn-lvfucs
 rc-update add lunavpn-lvfucs default
 
-# Enable and start UFW, then reboot
+# Final updates before reboot
+echo iptable_raw > /etc/modules-load.d/iptable_raw.conf
 ufw --force enable
 reboot
