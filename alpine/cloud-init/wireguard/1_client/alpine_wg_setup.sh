@@ -35,7 +35,7 @@ mkdir -p /app/lunavpn
 wget -O /app/lunavpn/lvfucs_get_latest.sh https://raw.githubusercontent.com/repasscloud/lunavpn-lvfucs/main/get_latest.sh
 chmod +x /app/lunavpn/lvfucs_get_latest.sh
 /app/lunavpn/lvfucs_get_latest.sh
-wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/ap/lunavpn/alpine_update.sh
+wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/lunavpn/alpine_update.sh
 chmod +x /app/lunavpn/alpine_update.sh
 (crontab -l ; echo "0 0 * * 1 /app/lunavpn/alpine_update.sh") | crontab -
 
