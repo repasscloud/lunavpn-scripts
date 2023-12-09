@@ -21,10 +21,10 @@ LunaVPN provides a secure and privacy-centric VPN solution with a variety of com
 
 The LunaVPN scripts cover the setup and configuration of the following components:
 
-- SquidProxy
-- Nginx
+- ~~SquidProxy~~
+- ~~Nginx~~
 - Caddy
-- Flask
+- ~~Flask~~
 - LunaVPN-fu
 - Docker
 - Docker Compose
