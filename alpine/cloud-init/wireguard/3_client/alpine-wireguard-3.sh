@@ -66,7 +66,7 @@ rc-update add lunavpn-lvfucs default
 # Wireguard setup
 mkdir -p /app/wg
 mkdir -p /app/wg/config
-wget -O /app/docker-compose.yml https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/wireguard/docker-compose-1-client.yml
+wget -O /app/docker-compose.yml https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/wireguard/docker-compose-3-client.yml
 wget -O /etc/init.d/docker-compose-wg https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/wireguard/docker-compose-wg
 chmod +x /etc/init.d/docker-compose-wg
 rc-update add docker-compose-wg default
