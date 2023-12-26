@@ -63,7 +63,7 @@ chmod +x /app/lunavpn/update_dns.sh
 # Set server.type (wg)
 echo "wg" | tr -d '\n' > /app/lunavpn/server.type
 wget -O /etc/init.d/lunavpn-lvfucs https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/lunavpn/lunavpn-lvfucs
-sed -i 's|command_args="-d /app/lunavpn/data.json"|command_args="--data-file /app/lunavpn/data.json [[ API.ENDPOINT]] [[ API.BEARER_TOKEN ]]"|' /etc/init.d/lunavpn-lvfucs
+sed -i 's|command_args="-d /app/lunavpn/data.json"|command_args="--data-file /app/lunavpn/data.json --api-endpoint [[ API.ENDPOINT]] --bearer-token [[ API.BEARER_TOKEN ]]"|' /etc/init.d/lunavpn-lvfucs
 chmod +x /etc/init.d/lunavpn-lvfucs
 rc-update add lunavpn-lvfucs default
 
