@@ -56,6 +56,9 @@ chmod +x /app/lunavpn/lvfucs_get_latest.sh
 wget -O /app/lunavpn/alpine_update.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/lunavpn/alpine_update.sh
 chmod +x /app/lunavpn/alpine_update.sh
 (crontab -l ; echo "0 0 * * 1 /app/lunavpn/alpine_update.sh") | crontab -
+wget -O /app/lunavpn/update_dns.sh https://raw.githubusercontent.com/repasscloud/lunavpn-scripts/main/alpine/app/lunavpn/update_dns.sh
+chmod +x /app/lunavpn/update_dns.sh
+/app/lunavpn/update_dns.sh
 
 # Set server.type (wg)
 echo "wg" | tr -d '\n' > /app/lunavpn/server.type
